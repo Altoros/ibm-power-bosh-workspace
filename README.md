@@ -8,10 +8,10 @@ BOSH workspace for BOSH and CF deployment to Power OpenStack.
 
 1. Build required assets using [power-bosh-jumpbox-bootstrap](https://github.com/Altoros/power-bosh-jumpbox-bootstrap) projects. Place stemcell to `stemcells/stemcell.tgz`, BOSH release to `releases/bosh-release.tgz` and OpenStack CPI release to `releases/cpi-release.tgz`.
 1. Put your credentials to `config/secret.yml` file (you can use `secret.yml.example` as a sample);
-  1.1 to retrieve `net_id` install the [nova Python client](https://github.com/openstack/python-novaclient) and execute:
-  ```
-  nova --os-username=xxx --os-password=xxx --os-tenant-name=xxx --os-auth-url="xxx" --os-compute-  api-version=2 network-list 
-  ```
+  -  to retrieve `net_id` install the [nova Python client](https://github.com/openstack/python-novaclient) and execute:
+     ```
+     nova --os-username=xxx --os-password=xxx --os-tenant-name=xxx --os-auth-url="xxx" --os-compute-  api-version=2 network-list 
+     ```
 1. Put floating IP address that will be assigned to MicroBOSH instance to `config/micro-bosh-stub.yml` file.
 1. Run `./generate_manifest micro-bosh` script, this will create `manifests/micro-bosh.yml` file from template in `templates/micro-bosh.yml`.
 1. build `bosh-init` from [this branch](https://github.com/Altoros/bosh-init/tree/power-v0.0.51)
