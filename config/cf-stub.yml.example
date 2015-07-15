@@ -1,0 +1,14 @@
+---
+cf:
+  director_uuid: <director_uuid>
+  router_floating_ip: <router_floating_ip>
+  nats_floating_ip: <nats_floating_ip>
+  etcd_floating_ip: <etcd_floating_ip>
+  db_floating_ip: <db_floating_ip>
+  uaa_floating_ip: <uaa_floating_ip>
+  login_floating_ip: <login_floating_ip>
+  nfs_floating_ip: <nfs_floating_ip>
+  cc_floating_ip: <cc_floating_ip>
+  loggregator_floating_ip: <loggregator_floating_ip>
+  hm_floating_ip: <hm_floating_ip>
+  dea_floating_ip: <dea_floating_ip>

@@ -1,0 +1,10 @@
+secret.yml
+config/*.yml
+manifests/*.yml*
+releases/*.tgz
+releases/*.tar.gz
+manifests/*.tgz
+manifests/*.tar.gz
+*-state.json*
+stemcells/*
+stemcell/*

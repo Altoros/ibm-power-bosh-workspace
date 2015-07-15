@@ -1,0 +1,31 @@
+#!/bin/sh
+
+configs=$(dirname $0)/config
+templates=$(dirname $0)/templates
+manifests=$(dirname $0)/manifests
+
+temlate_name=$1
+
+shift
+
+if [ ! -z "$template_name" ]; then
+  echo
+  echo "  Usage: ./generate_manifest manifest-name [stubs...]"
+  echo
+  exit 1
+fi
+
+if [ ! -f $configs/secret.yml ] || [ ! -f $configs/$temlate_name-stub.yml ]; then
+  echo
+  echo "$configs folder should contain secret.yml and $temlate_name-stub.yml files"
+  echo
+  exit 1
+fi
+
+spiff merge \
+  $templates/$temlate_name.yml \
+  $configs/secret.yml \
+  $configs/$temlate_name-stub.yml \
+  "$@" > $manifests/$temlate_name.yml
+
+echo "Done."

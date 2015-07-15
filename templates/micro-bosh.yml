@@ -1,0 +1,142 @@
+meta: (( merge ))
+microbosh: (( merge ))
+
+name: bosh
+
+releases:
+- name: bosh
+  url: file://./releases/bosh-release.tgz
+- name: bosh-openstack-cpi
+  url: file://./releases/cpi-release.tgz
+
+resource_pools:
+- name: vms
+  network: public
+  stemcell:
+    url: file://./stemcells/stemcell.tgz
+  cloud_properties:
+    instance_type: m1.large-cloudfoundry
+    availability_zone: (( .meta.openstack.availability_zone ))
+
+disk_pools:
+- name: disks
+  disk_size: 20_000
+
+networks:
+- name: private
+  type: dynamic
+  subnets:
+  - dns: ["192.168.60.10", "8.8.8.8"] # <--- Replace with your DNS
+    cloud_properties: { net_id: (( .meta.openstack.net_id )) } # <--- # Replace with private network UUID
+- name: public
+  type: vip
+
+jobs:
+- name: bosh
+  instances: 1
+
+  templates:
+  - {name: nats, release: bosh}
+  - {name: redis, release: bosh}
+  - {name: postgres, release: bosh}
+  - {name: blobstore, release: bosh}
+  - {name: director, release: bosh}
+  - {name: health_monitor, release: bosh}
+  - {name: registry, release: bosh}
+  - {name: powerdns, release: bosh}
+  - {name: cpi, release: bosh-openstack-cpi}
+
+  resource_pool: vms
+  persistent_disk_pool: disks
+
+  networks:
+  - name: private
+    default: [dns, gateway]
+  - name: public
+    static_ips: [(( .microbosh.floating_ip ))] # <--- Replace with a floating IP
+
+  properties:
+    nats:
+      address: 127.0.0.1
+      user: nats
+      password: nats-password
+
+    redis:
+      listen_addresss: 127.0.0.1
+      address: 127.0.0.1
+      password: redis-password
+
+    postgres: &db
+      host: 127.0.0.1
+      user: postgres
+      password: postgres-password
+      database: bosh
+      adapter: postgres
+
+    registry:
+      address: (( .microbosh.private_ip ))
+      host: (( .microbosh.private_ip ))
+      db: *db
+      http: {user: admin, password: admin, port: 25777}
+      username: admin
+      password: admin
+      port: 25777
+
+    blobstore:
+      address: (( .microbosh.private_ip ))
+      port: 25250
+      provider: dav
+      director: {user: director, password: director-password}
+      agent: {user: agent, password: agent-password}
+
+    director:
+      address: 127.0.0.1
+      name: my-bosh
+      db: *db
+      cpi_job: cpi
+      max_threads: 3
+
+    hm:
+      http: {user: hm, password: hm-password}
+      director_account: {user: admin, password: admin}
+      resurrector_enabled: true
+
+    openstack: &openstack
+      auth_url: (( .meta.openstack.auth_url ))
+      tenant: (( .meta.openstack.tenant ))
+      username: (( .meta.openstack.username ))
+      api_key: (( .meta.openstack.api_key ))
+      default_key_name: (( .meta.openstack.default_key_name ))
+      default_security_groups: (( .meta.openstack.default_security_groups ))
+      ignore_server_availability_zone: true
+
+    agent:
+      mbus: (( "nats://nats:nats-password@" .microbosh.private_ip ":4222" ))
+
+    ntp: &ntp [0.pool.ntp.org, 1.pool.ntp.org]
+
+    dns:
+      address: (( .microbosh.private_ip )) # Address of the primary PowerDNS instance
+      db: *db
+      distributor_threads: 2   # Number of threads to query the backend, for each receiver thread
+      receiver_threads: 2      # Number of sockets the powerdns process will open
+      webserver:
+        address: 0.0.0.0  # IP address PowerDNS webserver listens on (optional)
+        port: 8081
+
+cloud_provider:
+  template: {name: cpi, release: bosh-openstack-cpi}
+
+  ssh_tunnel:
+    host: (( .microbosh.floating_ip )) # <--- Replace with a floating IP
+    port: 22
+    user: vcap
+    private_key: /home/ubuntu/.ssh/id_rsa.pem # Path relative to this manifest file
+
+  mbus: (( "https://mbus:mbus-password@" .microbosh.floating_ip ":6868" )) # <--- Replace with a floating IP
+
+  properties:
+    openstack: *openstack
+    agent: {mbus: "https://mbus:mbus-password@0.0.0.0:6868"}
+    blobstore: {provider: local, path: /var/vcap/micro_bosh/data/cache}
+    ntp: *ntp

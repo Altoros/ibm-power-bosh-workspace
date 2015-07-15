@@ -1,0 +1,5 @@
+---
+microbosh:
+  floating_ip: <floating_ip>
+  # the same as floating IP in our configuration
+  private_ip: <floating_ip>
