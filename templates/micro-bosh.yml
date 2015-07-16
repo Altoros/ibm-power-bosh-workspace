@@ -5,15 +5,15 @@ name: bosh
 
 releases:
 - name: bosh
-  url: file://./releases/bosh-release.tgz
+  url: file://../releases/bosh-release.tgz
 - name: bosh-openstack-cpi
-  url: file://./releases/cpi-release.tgz
+  url: file://../releases/cpi-release.tgz
 
 resource_pools:
 - name: vms
   network: public
   stemcell:
-    url: file://./stemcells/stemcell.tgz
+    url: file://../stemcells/stemcell.tgz
   cloud_properties:
     instance_type: m1.large-cloudfoundry
     availability_zone: (( .meta.openstack.availability_zone ))
