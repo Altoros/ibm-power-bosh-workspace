@@ -6,5 +6,6 @@ releases/*.tar.gz
 manifests/*.tgz
 manifests/*.tar.gz
 *-state.json*
-stemcells/*
-stemcell/*
+stemcells/*.tar.gz
+stemcells/*.tgz
+
