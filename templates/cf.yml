@@ -181,7 +181,6 @@ jobs:
     release: cf
   - name: metron_agent
     release: cf
-
   networks:
   - name: public
     static_ips:
