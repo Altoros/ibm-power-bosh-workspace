@@ -2,6 +2,8 @@
 
 BOSH workspace for BOSH and CF deployment to Power OpenStack.
 
+__WARNING__: All templates and manifests from this project are designed to be used only in tests purposes. In this test case allows only public network to be used, which is very dangerous in a production.
+
 # How to use
 
 ### Deploy MicroBOSH
@@ -16,7 +18,6 @@ nova --os-username=xxx --os-password=xxx --os-tenant-name=xxx --os-auth-url="xxx
 1. Run `./generate_manifest micro-bosh` script, this will create `manifests/micro-bosh.yml` file from template in `templates/micro-bosh.yml`.
 1. build `bosh-init` from [this branch](https://github.com/Altoros/bosh-init/tree/power-v0.0.51)
 1. run `bosh-init deploy manifests/micro-bosh.yml`
-
 
 ### How to build OpenStack CPI for Power architecture
 ```bash

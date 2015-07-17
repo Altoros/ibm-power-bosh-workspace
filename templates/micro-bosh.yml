@@ -74,8 +74,8 @@ jobs:
       adapter: postgres
 
     registry:
-      address: (( .microbosh.private_ip ))
-      host: (( .microbosh.private_ip ))
+      address: (( .microbosh.floating_ip ))
+      host: (( .microbosh.floating_ip ))
       db: *db
       http: {user: admin, password: admin, port: 25777}
       username: admin
@@ -83,7 +83,7 @@ jobs:
       port: 25777
 
     blobstore:
-      address: (( .microbosh.private_ip ))
+      address: (( .microbosh.floating_ip ))
       port: 25250
       provider: dav
       director: {user: director, password: director-password}
@@ -111,12 +111,12 @@ jobs:
       ignore_server_availability_zone: true
 
     agent:
-      mbus: (( "nats://nats:nats-password@" .microbosh.private_ip ":4222" ))
+      mbus: (( "nats://nats:nats-password@" .microbosh.floating_ip ":4222" ))
 
     ntp: &ntp [0.pool.ntp.org, 1.pool.ntp.org]
 
     dns:
-      address: (( .microbosh.private_ip )) # Address of the primary PowerDNS instance
+      address: (( .microbosh.floating_ip )) # Address of the primary PowerDNS instance
       db: *db
       distributor_threads: 2   # Number of threads to query the backend, for each receiver thread
       receiver_threads: 2      # Number of sockets the powerdns process will open
