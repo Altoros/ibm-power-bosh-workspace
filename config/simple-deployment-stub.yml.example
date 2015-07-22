@@ -1,0 +1,4 @@
+---
+simpledeployment:
+  director_uuid: <director_uuid>
+  floating_ip: <floating_ip>

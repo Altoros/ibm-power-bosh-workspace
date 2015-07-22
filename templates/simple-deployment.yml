@@ -1,0 +1,71 @@
+meta: (( merge ))
+simpledeployment: (( merge ))
+
+name: simple-deployment
+director_uuid: (( .simpledeployment.director_uuid ))
+
+releases:
+- name: simple-deployment
+  version: latest
+
+compilation:
+  workers: 1
+  network: private
+  reuse_compilation_vms: true
+  cloud_properties:
+    availability_zone: (( .meta.openstack.availability_zone ))
+    instance_type: m1.cloudfoundry-medium
+
+update:
+  canaries: 1
+  canary_watch_time: 30000-240000
+  update_watch_time: 30000-600000
+  max_in_flight: 3
+
+resource_pools:
+- name: resource-pool-with-root-disk
+  network: private
+  size: 1
+  stemcell:
+    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    version: latest
+  cloud_properties:
+    instance_type: MicroBOSH
+    availability_zone: (( .meta.openstack.availability_zone ))
+
+- name: resource-pool-with-ephimeral-disk
+  network: private
+  size: 1
+  stemcell:
+    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    version: latest
+  cloud_properties:
+    instance_type: MicroBOSH
+    availability_zone: (( .meta.openstack.availability_zone ))
+
+networks:
+- name: private
+  type: dynamic
+  subnets:
+  - dns: ["192.168.60.10", "8.8.8.8"] # <--- Replace with your DNS
+    cloud_properties: { net_id: (( .meta.openstack.net_id )) }
+    range: 192.168.60.0/24
+    reserved:
+    - 192.168.60.2 - 192.168.60.11
+    static:
+    - 192.168.60.50 - 192.168.60.80    
+  cloud_properties: { net_id: (( .meta.openstack.net_id )) } # <--- # Replace with private network UUID
+- name: public
+  type: vip
+  cloud_properties: {}
+
+jobs:
+- name: simple-job 
+  template: loop
+  instances: 1
+  resource_pool: resource-pool-with-root-disk
+  persistent_disk: 10240
+  networks:
+    - name: public
+      static_ips:
+        - ((  ))
