@@ -5,7 +5,7 @@ name: simple-deployment
 director_uuid: (( .simpledeployment.director_uuid ))
 
 releases:
-- name: simple-deployment
+- name: simple-release
   version: latest
 
 compilation:
@@ -27,7 +27,7 @@ resource_pools:
   network: private
   size: 1
   stemcell:
-    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    name: bosh-openstack-kvm-ubuntu-trusty-go_agent
     version: latest
   cloud_properties:
     instance_type: MicroBOSH
@@ -37,7 +37,7 @@ resource_pools:
   network: private
   size: 1
   stemcell:
-    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    name: bosh-openstack-kvm-ubuntu-trusty-go_agent
     version: latest
   cloud_properties:
     instance_type: MicroBOSH
