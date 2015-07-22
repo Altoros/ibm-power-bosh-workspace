@@ -14,7 +14,7 @@ compilation:
   reuse_compilation_vms: true
   cloud_properties:
     availability_zone: (( .meta.openstack.availability_zone ))
-    instance_type: m1.cloudfoundry-medium
+    instance_type: m1.medium-cloudfoundry
 
 update:
   canaries: 1
