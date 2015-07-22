@@ -68,4 +68,8 @@ jobs:
   networks:
     - name: public
       static_ips:
-        - ((  ))
+        - (( simpledeployment.floating_ip ))
+    - name: private
+      default:
+      - dns
+      - gateway
