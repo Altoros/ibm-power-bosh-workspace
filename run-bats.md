@@ -4,7 +4,13 @@
 
 ```
 cd ~/workspace
+git checkout bats
+cp config/bat-stub.yml{.example,}
+vi config/bat-stub.yml
 ./generate_manifest bat.yml
+
+mkdir -p /tmp/ci-artifacts/openstack/dynamic/ubuntu/trusty/go/deployments
+cp ~/workspace/stemcells/stemcell.tgz /tmp/ci-artifacts/openstack/dynamic/ubuntu/trusty/go/deployments/bosh-stemcell-0000-openstack-kvm-ubuntu-trusty-go_agent-qcow.tgz
 
 cd ~
 git clone https://github.com/Altoros/bosh.git
@@ -13,7 +19,7 @@ git checkout power-2915
 bundle install
 vi .envrc  # see following description
 direnv allow
-bundle exec rake spec:system:micro[openstack,ubuntu,trusty,dynamic,go,false,qcow]
+bundle exec rake spec:system:micro[openstack,kvm,ubuntu,trusty,dynamic,go,false,qcow]
 ```
 
 ### .direnv
@@ -27,6 +33,7 @@ export BAT_STEMCELL=/home/ubuntu/workspace/stemcells/stemcell.tgz
 
 # path to the bat yaml file which is used to generate the deployment manifest (see below `bat.yml`)
 export BAT_DEPLOYMENT_SPEC=/home/ubuntu/workspace/manifests/bat.yml
+export BOSH_OPENSTACK_BAT_DEPLOYMENT_SPEC=/home/ubuntu/workspace/manifests/bat.yml
 
 # password used to ssh to the stemcells
 export BAT_VCAP_PASSWORD=c1oudc0w
