@@ -1,0 +1,22 @@
+---
+meta: (( merge ))
+bat: (( merge ))
+
+cpi: openstack
+properties:
+  uuid: (( .bat.director_uuid ))
+  stemcell:
+    name: bosh-openstack-kvm-ubuntu-trusty-go_agent
+    version: latest
+  pool_size: 1
+  instances: 1
+  instance_type: m1.medium-cloudfoundry
+  flavor_with_no_ephemeral_disk: m1.medium-cloudfoundry
+  vip: (( .bat.floating_ip )) # Virtual (public/floating) IP assigned to the bat-release job vm ('static' network), for ssh testing
+  networks:
+  - name: default
+    type: dynamic
+    cloud_properties:
+      net_id: (( .meta.openstack.net_id ))
+      security_groups: (( .meta.openstack.default_security_groups ))
+  # key_name: bosh # (optional) SSH keypair name, overrides the director's default_key_name setting
