@@ -43,7 +43,7 @@ jobs:
   - {name: director, release: bosh}
   - {name: health_monitor, release: bosh}
   - {name: registry, release: bosh}
-  # - {name: powerdns, release: bosh}
+  - {name: powerdns, release: bosh}
   - {name: cpi, release: bosh-openstack-cpi}
 
   resource_pool: vms
